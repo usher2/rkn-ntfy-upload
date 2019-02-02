@@ -1,0 +1,15 @@
+/var/log/upload/verify.log
+/var/log/upload/verify-error.log
+{
+        rotate 2
+        daily
+        missingok
+        notifempty
+        compress
+        delaycompress
+        postrotate
+                invoke-rc.d rsyslog rotate > /dev/null
+        endscript
+        create 644
+}
+

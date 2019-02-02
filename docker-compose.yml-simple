@@ -1,0 +1,99 @@
+version: '3.3'
+
+services:
+        nginx:
+                build:
+                        context: ./nginx
+                volumes:
+                        - upload:/var/upload
+                        - letsencrypt:/etc/letsencrypt:ro
+                        - www:/var/www:ro
+                depends_on:
+                        - upload
+                networks:
+                        - apps
+                ports:
+                        - "80:80"
+                        - "443:443"
+                logging:
+                        driver: syslog
+                        options:
+                                tag: nginx
+                restart: always
+        upload:
+                build:
+                        context: ./upload
+                container_name: upload.local
+                environment:
+                        - DATA_DIRECTORY=/var/upload
+                        - DEBUG_LEVEL=Info
+                        - MAX_FILES=2
+                        - MIN_FILES=2
+                        - MAX_FILE_SIZE=1048576
+                        - TASK_COMPLETE_TTL=86400
+                        - LISTEN_PORT=8080
+                        - TOKEN=SIMPLE_TOKEN_f742b7f695331081d219f364cc0097b462f9a00f9dc1af9a6350f220a2040373
+                        - DB_FILE=/var/lib/tasks/upload.db
+                volumes:
+                        - upload:/var/upload
+                        - tasks:/var/lib/tasks
+                networks:
+                        - apps
+                logging:
+                        driver: syslog
+                        options:
+                                tag: upload
+                restart: always
+        gostca:
+                build:
+                        context: ./gostca
+                networks:
+                        - apps
+                volumes:
+                        - gostca:/var/opt/gost-ca
+                logging:
+                        driver: syslog
+                        options:
+                                tag: gostca
+                restart: always
+        verify:
+                build:
+                        context: ./verify
+                environment:
+                        - DATA_DIRECTORY=/var/upload
+                        - TOKEN=SIMPLE_TOKEN_f742b7f695331081d219f364cc0097b462f9a00f9dc1af9a6350f220a2040373
+                        - CA_PATH=/var/opt/gost-ca/certs
+                        - API_URL=https://api.vkostre.org/api-01
+                volumes:
+                        - upload:/var/upload
+                        - gostca:/var/opt/gost-ca
+                networks:
+                        - apps
+                depends_on:
+                        - upload
+                logging:
+                        driver: syslog
+                        options:
+                                tag: verify
+                restart: always
+
+volumes:
+        www:
+                external: true
+        letsencrypt:
+                external: true
+        upload:
+                external: true
+        tasks:
+                external: true
+        gostca:
+                external: true
+
+networks:
+        apps:
+            driver: bridge
+            ipam:
+                driver: default
+                config:
+                    - subnet: 172.21.34.0/24
+

@@ -1,0 +1,5 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+37     1,5,9,13,17,21       *       *       *       root flock -x -n /tmp/gost-ca.lock git -C /var/opt/gost-ca pull https://github.com/schors/gost-russian-ca.git && c_rehash /var/opt/gost-ca/certs
+

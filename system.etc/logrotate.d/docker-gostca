@@ -1,0 +1,15 @@
+/var/log/upload/gostca.log
+/var/log/upload/gostca-error.log
+{
+        rotate 2
+        daily
+        missingok
+        notifempty
+        compress
+        delaycompress
+        postrotate
+                invoke-rc.d rsyslog rotate > /dev/null
+        endscript
+        create 644
+}
+
