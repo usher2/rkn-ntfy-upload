@@ -2,8 +2,5 @@
 *.swp
 *.db
 dhparam.pem
-verify/code/
-gostca/old.certs/
-upload/code/
 docker-compose.yml
 
