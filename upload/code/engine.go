@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+        "regexp"
 )
 
 const (
@@ -257,6 +258,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, db IStorage) {
 		return
 	}
 	defer dirCleanup()
+        re := regexp.MustCompile(`\s*\(\d+\)\s*\.`)
 	fcounter := int(0) // uploaded file counter
 	for {
 		part, err := reader.NextPart()
@@ -269,7 +271,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, db IStorage) {
 				Error.Printf("[%s]: Too many files\n", r.RemoteAddr)
 				return
 			}
-			dst, err := os.Create(dataDir + "/" + part.FileName())
+                        _filename := re.ReplaceAllString(part.FileName(),".")
+			dst, err := os.Create(dataDir + "/" + _filename)
 			if err != nil {
 				sendJSONErrorMessage(w, E_SERVER_ERROR, http.StatusInternalServerError)
 				Error.Printf("[%s]: Unexpected error: %s\n", r.RemoteAddr, err)
@@ -279,11 +282,11 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, db IStorage) {
 			n, err := io.Copy(dst, io.LimitReader(part, Conf.MaxFileSize))
 			if err == nil && n == Conf.MaxFileSize {
 				sendJSONErrorMessage(w, E_INVALID_REQUEST, http.StatusBadRequest)
-				Error.Printf("[%s]: File too large: %s\n", r.RemoteAddr, part.FileName())
+				Error.Printf("[%s]: File too large: %s\n", r.RemoteAddr, _filename)
 				return
 			} else if err != nil && err != io.EOF {
 				sendJSONErrorMessage(w, E_INVALID_REQUEST, http.StatusBadRequest)
-				Error.Printf("[%s]: Can't read file %s: %s\n", r.RemoteAddr, part.FileName(), err)
+				Error.Printf("[%s]: Can't read file %s: %s\n", r.RemoteAddr, _filename, err)
 				return
 			}
 			dst.Close()
@@ -349,7 +352,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, db IStorage) {
 func optionsHandler(w http.ResponseWriter, r *http.Request) {
 	method := r.Header.Get("Access-Control-Request-Method")
 	headers := r.Header.Get("Access-Control-Request-Headers")
-	if method != "POST" || method != "GET" || method != "DELETE" || method != "PUT" || method != "PATCH" {
+	if method != "POST" && method != "GET" && method != "DELETE" && method != "PUT" && method != "PATCH" {
 		method = "POST"
 	}
 	// start output

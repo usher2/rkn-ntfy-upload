@@ -1,6 +1,7 @@
 *\~
 *.swp
 *.db
+/upload/code/code
 dhparam.pem
 docker-compose.yml
 
