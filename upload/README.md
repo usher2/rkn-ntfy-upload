@@ -12,7 +12,7 @@ https://api.vkostre.org/api-01
 | HTTP METHOD   | POST         | GET                 |
 |---------------|--------------|---------------------|
 | /upload       | Upload files | -                   |
-| /task/<task> | -            | Check verify status |
+| /task/<task>  | -            | Check verify status |
 
 
 # Upload two files
