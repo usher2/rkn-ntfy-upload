@@ -31,8 +31,8 @@ def cms_signing_time(cms):
                         d[k] = int(d[k], 10)
         return calendar.timegm((d['year'], d['mon'], d['day'], d['hour'], d['min'], d['sec']))
 
-def confirm(apiurl, nonce, token, act):
-        url = apiurl + "/nonce/" + nonce + "/" + act
+def confirm(apiurl, task, token, act):
+        url = apiurl + "/task/" + task + "/" + act
         request = urllib.request.Request(url)
         request.add_header('Authorization', "Bearer %s" % token)
         request.get_method = lambda: 'PATCH'
@@ -65,15 +65,15 @@ def cleanup(path):
                 shutil.rmtree(path)
 
 
-def handle(args, nonce):
+def handle(args, task):
 
-        logger.info("Try to verify %s", nonce)
-        path = os.path.join(args.datadir, nonce[0], nonce[1], nonce)
+        logger.info("Try to verify %s", task)
+        path = os.path.join(args.datadir, task[0], task[1], task)
 
         if not os.path.exists(path) or not os.path.isdir(path):
                 logger.warning("%s is not exists or not directory!", path)
                 try:
-                        code = confirm(args.apiurl, nonce, args.token, "fail")
+                        code = confirm(args.apiurl, task, args.token, "fail")
                         logger.info("Confirm fail: %s", code)
                         if code in (200, 409, 400):
                                 cleanup(path)
@@ -93,7 +93,7 @@ def handle(args, nonce):
         if len(files) != 2:
                 logger.warning("Too many files!")
                 try:
-                        code = confirm(args.apiurl, nonce, args.token, "fail")
+                        code = confirm(args.apiurl, task, args.token, "fail")
                         logger.info("Confirm fail: %s", code)
                         if code in (200, 409, 400):
                                 cleanup(path)
@@ -110,7 +110,7 @@ def handle(args, nonce):
         else:
                 logger.error("Unknown files!")
                 try:
-                        code = confirm(args.apiurl, nonce, args.token, "fail")
+                        code = confirm(args.apiurl, task, args.token, "fail")
                         logger.warning("Confirm fail: %s", code)
                         if code in (200, 409, 400):
                                 cleanup(path)
@@ -143,7 +143,7 @@ def handle(args, nonce):
                 try:
                         with open(os.path.join(path,"confirm"),"w+") as f:
                                 f.write("")
-                        code = confirm(args.apiurl, nonce, args.token, "ok")
+                        code = confirm(args.apiurl, task, args.token, "ok")
                         logger.info("Confirm ok: %s", code)
                         #if code in (200, 409, 400):
                         #        cleanup(path)
@@ -152,7 +152,7 @@ def handle(args, nonce):
         except:
                 logger.warning("Verify fail: %s", sys.exc_info()[1])
                 try:
-                        code = confirm(args.apiurl, nonce, args.token, "fail")
+                        code = confirm(args.apiurl, task, args.token, "fail")
                         logger.info("Confirm fail: %s", code)
                         if code in (200, 409, 400):
                                 cleanup(path)
@@ -179,10 +179,10 @@ if __name__ == "__main__":
         while True:
                 dt = 0
                 try:
-                        code, queue, nonce = getq(args.apiurl, args.token)
+                        code, queue, task = getq(args.apiurl, args.token)
                         if code == 200:
-                                logger.info("Found code: %s queue: %s Nonce: %s", code, queue, nonce)
-                                handle(args, nonce)
+                                logger.info("Found code: %s queue: %s Task: %s", code, queue, task)
+                                handle(args, task)
                         if code == 204 and dt < 3:
                                 dt += 1
                         else:

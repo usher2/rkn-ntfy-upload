@@ -23,7 +23,7 @@ find ${datadir} -name "*.sig" -print | while read sigfile; do
                 for i in 1 2 3 4 5 6 7 8 9 10 ; do
                         status=`curl -f -s -X GET ${apiurl}/task/${task} | sed -n -e 's/^\s*\"status\"\s*\:\s*\"\([[:alnum:]]\+\).*/\1/p'`
                         if [ $? -eq 0 ]; then
-                                 if [ "x" != "x${status}" -a "$status" != "received" ]; then
+                                 if [ "x" != "x${status}" -a "$status" != "wait" ]; then
                                              echo "(${i}) ${datafile}: $status"
                                              break
                                  fi
