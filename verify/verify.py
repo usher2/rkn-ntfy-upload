@@ -56,9 +56,9 @@ def getq(apiurl, token):
         code = response.getcode()
         if code == 200:
                 data = json.loads(body.decode(encoding))
-                return code, data["queue"], data["id"]
+                return code, data["id"]
         else:
-                return code, "", ""
+                return code, ""
 
 def cleanup(path):
         if os.path.exists(path):
@@ -179,9 +179,9 @@ if __name__ == "__main__":
         while True:
                 dt = 0
                 try:
-                        code, queue, task = getq(args.apiurl, args.token)
+                        code, task = getq(args.apiurl, args.token)
                         if code == 200:
-                                logger.info("Found code: %s queue: %s Task: %s", code, queue, task)
+                                logger.info("Found code: %s Task: %s", code, task)
                                 handle(args, task)
                         if code == 204 and dt < 3:
                                 dt += 1
