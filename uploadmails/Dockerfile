@@ -3,21 +3,20 @@ FROM ubuntu:bionic
 LABEL maintainer="Phil Kulin <schors@gmail.com>"
 
 RUN groupadd -g 107 crontab \
+        && groupadd -g 6000 fetch \
+        && useradd -d /dev/null -g fetch -u 6000 -s /sbin/nologin fetch \
+        && install -d -o fetch -g fetch /var/fetch \
+        && install -d -o fetch -g fetch /srv/fetch \
         && apt-get update && apt-get install -q -y --no-install-recommends \
-        git \
         cron \
         ca-certificates \
         openssl libengine-gost-openssl1.1 \
         locales \
         locales-all \
-        && rm -f /etc/cron.d/* \
-        && install -d /var/opt/gost-ca
+        curl \
+        && rm -f /etc/cron.d/*
 
-WORKDIR /var/opt/gost-ca
-
-RUN git clone https://github.com/schors/gost-russian-ca.git .
-
-COPY old.certs /var/opt/old.certs
+COPY grab.sh /srv/fetch/grab.sh
 COPY cron_entrypoint.sh /entrypoint.sh
 COPY crontab /etc/crontab
 

@@ -76,6 +76,32 @@ services:
                         options:
                                 tag: verify
                 restart: always
+        fetchmail:
+                build:
+                        context: ./fetchmail
+                volumes:
+                        - fetch:/var/fetch
+                networks:
+                        - apps
+                logging:
+                        driver: syslog
+                        options:
+                                tag: fetchmail
+                restart: always
+        uploadmails:
+                build:
+                        context: ./uploadmails
+                volumes:
+                        - fetch:/var/fetch
+                networks:
+                        - apps
+                depends_on:
+                        - upload
+                logging:
+                        driver: syslog
+                        options:
+                                tag: uploadmails
+                restart: always
 
 volumes:
         www:
@@ -83,6 +109,8 @@ volumes:
         letsencrypt:
                 external: true
         upload:
+                external: true
+        fetch:
                 external: true
         tasks:
                 external: true

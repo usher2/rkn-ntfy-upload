@@ -2,6 +2,6 @@
 *.swp
 *.db
 /upload/code/code
+/fetchmail/fetchmailrc
 dhparam.pem
 docker-compose.yml
-

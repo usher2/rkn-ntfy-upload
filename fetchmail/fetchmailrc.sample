@@ -1,0 +1,8 @@
+set daemon 60
+poll mail.451f.cc
+protocol pop3
+user 'site@vkostre.org'
+password 'example_password_usOwdyashyigcow4'
+mda '/usr/bin/procmail -d %T'
+ fetchall
+ nokeep
