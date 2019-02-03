@@ -1,5 +1,5 @@
-/var/log/upload/verify.log
-/var/log/upload/verify-error.log
+/var/log/opt-services/verify.log
+/var/log/opt-services/verify-error.log
 {
         rotate 2
         daily

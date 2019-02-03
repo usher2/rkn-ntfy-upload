@@ -1,5 +1,5 @@
-/var/log/upload/nginx.log
-/var/log/upload/nginx-error.log
+/var/log/opt-services/nginx.log
+/var/log/opt-services/nginx-error.log
 {
         rotate 2
         daily

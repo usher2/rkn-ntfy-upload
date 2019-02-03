@@ -1,5 +1,5 @@
-/var/log/upload/gostca.log
-/var/log/upload/gostca-error.log
+/var/log/opt-services/gostca.log
+/var/log/opt-services/gostca-error.log
 {
         rotate 2
         daily

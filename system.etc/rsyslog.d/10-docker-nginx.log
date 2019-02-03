@@ -1,10 +1,10 @@
 $FileCreateMode 0644
 if $programname == 'nginx' and $syslogseverity > '4' then {
-    /var/log/upload/nginx.log
+    /var/log/opt-services/nginx.log
     stop
 }
 if $programname == 'nginx' and $syslogseverity <= '4' then {
-    /var/log/upload/nginx-error.log
+    /var/log/opt-services/nginx-error.log
     stop
 }
 $FileCreateMode 0600
