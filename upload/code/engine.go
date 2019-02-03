@@ -281,7 +281,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, db IStorage) {
 			defer dst.Close()
 			n, err := io.Copy(dst, io.LimitReader(part, Conf.MaxFileSize))
 			if err == nil && n == Conf.MaxFileSize {
-				sendJSONErrorMessage(w, E_INVALID_REQUEST, http.StatusBadRequest)
+				sendJSONErrorMessage(w, E_FILE_TOO_BIG, http.StatusBadRequest)
 				Error.Printf("[%s]: File too large: %s\n", r.RemoteAddr, _filename)
 				return
 			} else if err != nil && err != io.EOF {

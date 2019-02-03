@@ -34,6 +34,9 @@ https://api.vkostre.org/api-01
     **Content:** `{ error: "server_error" }`
 
   * **Code:** 400 <br />
+    **Content:** `{ error: "file_too_big" }`
+
+  * **Code:** 400 <br />
     **Content:** `{ error: "invalid_request" }`
 
 # Check status

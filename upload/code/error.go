@@ -7,6 +7,7 @@ import (
 
 const (
 	E_INVALID_REQUEST string = "invalid_request"
+        E_FILE_TOO_BIG           = "file_too_big"
 	E_TASK_NOT_FOUND         = "invalid_task"
 	E_ACCESS_DENIED          = "invalid_token"
 	E_CONFLICT               = "status_conflict"

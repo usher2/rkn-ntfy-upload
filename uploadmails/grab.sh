@@ -38,7 +38,9 @@ find "${workdir}" -type d -print | while read datadir; do
                         else
                                 error=`echo "${result}" | sed -n -e 's/^\s*\"error\"\s*\:\s*\"\([[:alnum:]]\+\).*/\1/p'`
                                 echo "Something wrong with ${sigfile} uploading: ${error}"
-                                fl=1
+                                if [ "${error}" != "file_too_big" ]; then
+                                        fl=1
+                                fi
                                 continue
                         fi
                 fi
