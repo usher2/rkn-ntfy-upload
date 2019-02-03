@@ -10,9 +10,6 @@ stop() {
     echo "Done."
 }
 
-cp -rf /var/opt/old.certs/*.pem /var/opt/gost-ca/certs
-c_rehash /var/opt/gost-ca/certs
-
 echo "Running $@"
 if [ "$(basename $1)" = "$DAEMON" ]; then
     trap stop SIGINT SIGTERM

@@ -1,5 +1,5 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-*     *       *       *       *       root flock -x -n /tmp/fetch.lock /srv/fetch/grab.sh
+*     *       *       *       *       fetch flock -x -n /tmp/fetch.lock /srv/fetch/grab.sh /var/fetch
 

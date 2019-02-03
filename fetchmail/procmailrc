@@ -1,2 +1,3 @@
 :0
-| /srv/fetch/unpack.sh /var/fetch
+| /home/fetch/unpack.sh /var/fetch
+
