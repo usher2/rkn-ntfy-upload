@@ -30,6 +30,12 @@ find "${workdir}" -type d -print | while read datadir; do
         find ${datadir} -type f -name "*.sig" -print | while read sigfile; do
                 datafile=${sigfile%.sig}
                 if [ -f "$datafile" ]; then
+                        sigsize=`stat --printf %s "$sigfile"`
+                        datasize=`stat --printf %s "$datafile"`
+                        if [ $datasize -gt 1048575 -o $sigsize -gt 1048575 ]; then
+                                echo "File too big"
+                                continue
+                        fi
                         echo "${sigfile} ${datafile}"
                         result=`curl -f -s -X POST -F "file1=@${datafile}" -F "file2=@${sigfile}" ${apiurl}/upload`
                         if [ $? -eq 0 ]; then
